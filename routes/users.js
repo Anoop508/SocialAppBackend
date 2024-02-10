@@ -40,7 +40,7 @@ router.delete('/delete/:id', async (req, resp) => {
 
     router.get('/get', (req, resp)=>{
         User.find().then((users)=>{
-            resp.status(200).json({status:true, message:"User list", data:users})
+            resp.status(200).json({status:true, message:"Users fetched successfully", data:users})
         }).catch((err)=>{
             resp.status(500).json(err)
         })
