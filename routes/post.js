@@ -42,8 +42,8 @@ router.delete('/delete/:id', async (req, resp) => {
             }).catch((err) => {
                 resp.status(200).json({ status: false, mesagae: "Something went wrong", err: err })
             })
-        }else{
-            resp.status(200).json({status: false, message: "Post Id is not found"})
+        } else {
+            resp.status(200).json({ status: false, message: "Post Id is not found" })
         }
 
     } catch (err) {
@@ -53,8 +53,43 @@ router.delete('/delete/:id', async (req, resp) => {
 
 //get post details by id
 
+router.get('/getPostdetails/:id', async (req, resp) => {
+    try {
+        let postid = await Post.findOne({ _id: req.params.id })
+        if (postid) {
+
+            Post.findOne({ _id: req.params.id }).then((response) => {
+                resp.status(200).json({ status: true, message: "Post details fetched Successfully", "Post Details": response })
+            }).catch((err) => {
+                resp.status(200).json({ status: false, message: "Somethimg went wrong", err: err })
+            })
+
+        } else {
+            resp.status(200).json({ status: false, message: 'Post ID is not found' })
+        }
+
+    } catch (err) {
+        resp.status(500).json(err)
+    }
+})
 
 //get all posts
+
+router.get("/getAllPost", async (req, resp) => {
+    try {
+        let post = await Post.find();
+        if (post) {
+            resp.status(200).json({ status: true, mesage: "All post fetched successfully", "Post Collection": post })
+        }else{
+            resp.status(200).json({status: false, mesage:"Post does not exist", })
+        }
+    }catch(err){
+        resp.status(500).json(err)
+    }
+
+});
+
+
 
 //get all posts of any user
 
