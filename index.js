@@ -9,6 +9,9 @@ dotenv.config()
 const userRoutes = require('./routes/users')
 const AuthRoutes = require('./routes/auth')
 const PostRoutes = require('./routes/post')
+const CommentRoutes = require('./routes/comment')
+
+
 
 app.use(express.json())
 
@@ -24,6 +27,7 @@ mongoose.connect(process.env.MONGO_URL,{
 app.use('/socialapp/api/users',userRoutes)
 app.use('/socialapp/api/auth',AuthRoutes)
 app.use('/socialapp/api/post',PostRoutes)
+app.use('/socialapp/api/comment',CommentRoutes);
 
 app.listen(8200, ()=>{
     console.log("App is running 8200")
