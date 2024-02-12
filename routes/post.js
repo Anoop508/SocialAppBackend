@@ -1,12 +1,16 @@
 const router = require('express').Router()
 const Post = require('../models/Post')
 const User = require("../models/User")
+const upload = require("../middleware/upload")
 
 //add post
 
-router.post('/addpost', (req, resp) => {
+router.post('/addpost', upload.single("imageUrl") , (req, resp) => {
     try {
         const newPost = new Post(req.body)
+        if(req.file){
+            newPost.imageUrl=req.file.filename;
+        }
         newPost.save().then((post) => {
             resp.status(200).json({ message: 'post added successfully', postDetails: post })
         }).catch((err) => {

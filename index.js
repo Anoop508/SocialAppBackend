@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 
-const morgon = require('morgan');
+const morgan = require('morgan');
 const dotenv = require('dotenv')
 const mongoose = require('mongoose')
 const helmet = require('helmet')
@@ -28,7 +28,9 @@ app.use('/socialapp/api/users',userRoutes)
 app.use('/socialapp/api/auth',AuthRoutes)
 app.use('/socialapp/api/post',PostRoutes)
 app.use('/socialapp/api/comment',CommentRoutes);
-
+app.use('/uploads',express.static('uploads'))
+app.use(helmet())
+app.use(morgan("common"))
 app.listen(8200, ()=>{
     console.log("App is running 8200")
 })
