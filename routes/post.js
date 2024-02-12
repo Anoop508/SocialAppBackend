@@ -1,5 +1,6 @@
 const router = require('express').Router()
 const Post = require('../models/Post')
+const User = require("../models/User")
 
 //add post
 
@@ -80,17 +81,65 @@ router.get("/getAllPost", async (req, resp) => {
         let post = await Post.find();
         if (post) {
             resp.status(200).json({ status: true, mesage: "All post fetched successfully", "Post Collection": post })
-        }else{
-            resp.status(200).json({status: false, mesage:"Post does not exist", })
+        } else {
+            resp.status(200).json({ status: false, mesage: "Post does not exist", })
         }
-    }catch(err){
+    } catch (err) {
         resp.status(500).json(err)
     }
 
 });
 
-
-
 //get all posts of any user
+
+router.get('/getAllPostByuserID/:userId', async (req, resp) => {
+    try {
+
+        let userId = await User.findOne({ _id: req.params.userId })
+
+        if (userId) {
+            Post.find({ userId: req.params.userId }).then((response) => {
+                resp.status(200).json({ status: true, message: "Post fetch Successfully", postDetails: response })
+            }).catch((err) => {
+                resp.status(200).json({ status: false, message: 'Something went wrong', error: err })
+            })
+
+        } else {
+            resp.status(200).json({ status: false, message: 'Userid is not correct' })
+        }
+
+    } catch (err) {
+        resp.status(500).json(err)
+    }
+})
+
+// like post 
+router.put('/like/:id', async (req, resp) => {
+    try {
+        const post = await Post.findOne({ _id: req.params.id })
+        let isliked = false
+
+        post.likes.map((item) => {
+            if (item === req.body.userId) {
+                isliked = true
+            }
+        })
+
+        if (isliked) {
+            let res1 = await Post.updateOne({ _id: req.params.id }, { $pull: { likes: req.body.userId } })
+            resp.status(200).json({ status: true, message: 'Liked removed successfully' })
+        } else {
+            let res1 = await Post.updateOne({ _id: req.params.id }, { $push: { likes: req.body.userId } })
+            resp.status(200).json({ status: true, message: "Liked added successfully " })
+        }
+
+
+
+    } catch (err) {
+        resp.status(500).json({ Error: err })
+    }
+})
+
+
 
 module.exports = router
